@@ -1,0 +1,821 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="Propuesta de viaje en auto a Bariloche, los 7 Lagos y el Lácar. Enero 2027.">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Rumbo al Sur 2027</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Instrument+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: afiche de Parques Nacionales que se vuelve hoja de ruta.
+   Acto 1: hero con la cordillera y el perfil real de la ruta. Acto 2: relato con scroll, mapa fijo con cámara que sigue a la van.
+   Acto 3: banda oscura de lagos, números en ticket, calendario de enero, cierre sobre otra cresta. Verdes de bosque, azules de lago. */
+:root{
+  --bg:#EAF2EF; --ink:#0F2E29; --muted:#4A6964; --line:#C3D6CF;
+  --lake:#0F4F6E; --glacier:#3E93B3; --forest:#24604A; --route:#12A27E; --mist:#A9CBD6; --mount:#8FAEA2;
+  --sky:#D7E9EE; --far:#A9CAD7; --mid:#5F98AE; --near:#2F6E57; --hero-water:#2C6F8A; --snow:#F4FAFA; --land:#DDE9E3; --water:#BCD9E2;
+  --band:#174337; --band-ink:#E4F1EC; --band-muted:#A3C3B8; --band-lake:#3E93B3;
+  --slab:"Alfa Slab One", Rockwell, "Roboto Slab", Georgia, serif;
+  --sans:"Instrument Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#0A1917; --ink:#DCECE6; --muted:#93AFA8; --line:#22403F;
+  --lake:#6CC0E0; --glacier:#4FA6C6; --forest:#7CC59A; --route:#3FD0A2; --mist:#3D6A78; --mount:#3C5E59;
+  --sky:#0E2430; --far:#1D4352; --mid:#235A6B; --near:#1C4A3B; --hero-water:#0C3242; --snow:#9DBFCB; --land:#0F2226; --water:#123744;
+  --band:#0E2430; --band-ink:#DCECE6; --band-muted:#8EAAA3; --band-lake:#2B6F88; color-scheme:dark } }
+:root[data-theme="dark"]{
+  --bg:#0A1917; --ink:#DCECE6; --muted:#93AFA8; --line:#22403F;
+  --lake:#6CC0E0; --glacier:#4FA6C6; --forest:#7CC59A; --route:#3FD0A2; --mist:#3D6A78; --mount:#3C5E59;
+  --sky:#0E2430; --far:#1D4352; --mid:#235A6B; --near:#1C4A3B; --hero-water:#0C3242; --snow:#9DBFCB; --land:#0F2226; --water:#123744;
+  --band:#0E2430; --band-ink:#DCECE6; --band-muted:#8EAAA3; --band-lake:#2B6F88; color-scheme:dark }
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:17px;line-height:1.6;overflow-x:hidden}
+h1,h2{font-family:var(--slab);font-weight:400;margin:0;line-height:1;text-wrap:balance}
+h3{font-family:var(--sans);font-weight:600;margin:0;letter-spacing:-.02em;line-height:1.12;text-wrap:balance}
+p{margin:0}
+.gutter{padding-inline:clamp(16px,5vw,72px)}
+:focus-visible{outline:3px solid var(--glacier);outline-offset:3px}
+
+/* ---------- Acto 1: hero ---------- */
+.hero{position:relative;height:clamp(560px,88vh,860px);overflow:hidden;background:var(--sky)}
+.hero svg{position:absolute;inset:0;width:100%;height:100%}
+.layer{will-change:transform}
+.hero-title{position:absolute;left:0;right:0;top:clamp(44px,10vh,104px);z-index:2;display:flex;flex-direction:column;gap:18px}
+.hero h1{font-size:clamp(3.6rem,10.5vw,9rem);color:var(--lake);letter-spacing:-.01em;line-height:.92}
+.hero h1 .ln{display:block;overflow:hidden;padding-bottom:.04em}
+.hero h1 .ln>span{display:block}
+.hero .sub{font-size:clamp(1.05rem,1.6vw,1.3rem);max-width:30ch;font-weight:500}
+.scroll-cue{position:absolute;left:50%;bottom:20px;z-index:2;transform:translateX(-50%);color:var(--snow);font-size:.92rem;font-weight:500;display:flex;flex-direction:column;align-items:center;gap:6px;text-decoration:none}
+.scroll-cue i{width:2px;height:28px;background:currentColor;display:block;animation:cue 1.8s ease-in-out infinite;transform-origin:top}
+@keyframes cue{0%{transform:scaleY(.2)}50%{transform:scaleY(1)}100%{transform:scaleY(.2);opacity:.3}}
+
+/* ---------- Pedido ---------- */
+.ask{padding-block:clamp(88px,11vw,150px) clamp(64px,8vw,110px);display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:clamp(36px,6vw,96px);align-items:end}
+.ask .say{font-family:var(--slab);font-size:clamp(2rem,4.4vw,3.5rem);line-height:1.12;max-width:17ch}
+.ask .say b{font-weight:400;color:var(--route)}
+.ask .small{margin-top:28px;font-size:1.06rem;color:var(--muted);max-width:52ch}
+.strip{display:flex;flex-direction:column;gap:12px}
+.strip-days{display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:4px}
+.strip-days div{display:flex;flex-direction:column;gap:6px;align-items:center;font-size:.85rem;font-weight:600;color:var(--muted)}
+.strip-days i{display:block;width:100%;height:clamp(54px,8vw,92px);border-radius:6px;background:var(--mist)}
+.strip-days i.sur{background:var(--route)}
+.strip-days i.half-in{background:linear-gradient(180deg,var(--mist) 55%,var(--route) 55%)}
+.strip-days i.half-out{background:linear-gradient(180deg,var(--route) 45%,var(--mist) 45%)}
+.strip p{font-size:.95rem;color:var(--muted)}
+.strip p b{color:var(--ink);font-weight:600}
+
+/* ---------- Acto 2: viaje ---------- */
+.journey{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);gap:clamp(28px,4vw,64px);align-items:start;padding-bottom:40px}
+.chapters{display:flex;flex-direction:column}
+.chapter{position:relative;min-height:72vh;display:flex;flex-direction:column;justify-content:center;gap:14px;padding:6vh 0 6vh 28px}
+.chapter .rule{position:absolute;left:0;top:14%;bottom:14%;width:2px;background:var(--line);border-radius:2px;overflow:hidden}
+.chapter .rule i{position:absolute;inset:0;background:var(--route);transform-origin:top;transform:scaleY(0)}
+.chapter .date{font-family:var(--slab);font-size:clamp(3.2rem,5.4vw,4.5rem);line-height:.9;color:var(--mist);transition:color .45s}
+.chapter.on .date{color:var(--route)}
+.chapter .wd{font-weight:600;color:var(--forest);font-size:1rem}
+.chapter h3{font-size:clamp(1.6rem,2.6vw,2.1rem)}
+.chapter .meta{font-variant-numeric:tabular-nums;font-weight:600}
+.chapter .meta span{color:var(--muted);font-weight:400}
+.chapter .txt{max-width:46ch;color:var(--muted);transition:color .45s}
+.chapter.on .txt{color:var(--ink)}
+.chapter .bed{display:flex;gap:10px;align-items:baseline;font-size:.98rem}
+.chapter .bed b{font-weight:600;color:var(--forest)}
+.chapter .bed svg{flex:0 0 auto;align-self:center;color:var(--forest)}
+.tbd{display:inline-block;font-size:.8rem;font-weight:600;color:var(--lake);border:1px solid currentColor;border-radius:999px;padding:0 8px;margin-left:4px;vertical-align:1px}
+
+.mapcol{position:sticky;top:calc(env(safe-area-inset-top,0px) + 3vh);height:94vh;display:flex;flex-direction:column;gap:10px;padding-block:1vh}
+.odo{display:flex;align-items:baseline;gap:8px;font-variant-numeric:tabular-nums;color:var(--muted);font-size:.95rem;min-height:2.2rem}
+.odo b{font-family:var(--slab);font-weight:400;font-size:1.9rem;line-height:1;color:var(--lake)}
+.map-frame{position:relative;flex:1;min-height:0;border-radius:20px;overflow:hidden;background:var(--land)}
+.map-frame svg{position:absolute;inset:0;width:100%;height:100%;display:block}
+.tour{position:absolute;right:12px;top:12px;width:42px;height:42px;border-radius:50%;border:0;background:var(--lake);color:var(--bg);display:grid;place-items:center;cursor:pointer;box-shadow:0 2px 10px color-mix(in srgb,var(--ink) 25%,transparent)}
+.tour svg{position:static;width:16px;height:16px}
+
+/* SVG mapa */
+#map{--z:1}
+.m-water{fill:var(--water)}
+.m-chile{fill:var(--mist);opacity:.28}
+.m-river{fill:none;stroke:var(--glacier);stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round;opacity:.75;vector-effect:non-scaling-stroke}
+.m-river.wide{stroke:var(--water);stroke-width:5;opacity:1}
+.m-hach{stroke:var(--mount);stroke-width:1.3;stroke-linecap:round;vector-effect:non-scaling-stroke}
+.m-lake{fill:var(--water);stroke:var(--glacier);stroke-width:1;vector-effect:non-scaling-stroke}
+.m-grid{stroke:var(--line);stroke-width:1;opacity:.35;vector-effect:non-scaling-stroke}
+.m-base{fill:none;stroke:var(--bg);stroke-width:7;stroke-linejoin:round;stroke-linecap:round;opacity:.4;vector-effect:non-scaling-stroke}
+.m-back{fill:none;stroke:var(--lake);stroke-width:2;stroke-dasharray:3 6;stroke-linecap:round;opacity:.6;vector-effect:non-scaling-stroke}
+.m-done{fill:none;stroke:var(--route);stroke-width:5;stroke-linejoin:round;stroke-linecap:round;vector-effect:non-scaling-stroke}
+.m-spur{fill:none;stroke:var(--forest);stroke-width:2;stroke-dasharray:2 5;stroke-linecap:round;vector-effect:non-scaling-stroke}
+.m-spur-done{fill:none;stroke:var(--route);stroke-width:4;stroke-linecap:round;stroke-linejoin:round;vector-effect:non-scaling-stroke}
+.m-stop{fill:var(--bg);stroke:var(--ink);stroke-width:2;vector-effect:non-scaling-stroke}
+.m-stop.home{fill:var(--forest);stroke:var(--bg)}
+.m-poi{fill:var(--forest);stroke:var(--bg);stroke-width:1.5;vector-effect:non-scaling-stroke}
+.m-l{paint-order:stroke;stroke:var(--land);stroke-linejoin:round;stroke-width:calc(3.5px / var(--z));font-family:var(--sans)}
+.t1{font-size:calc(15px / var(--z));font-weight:600;fill:var(--ink)}
+.t2{font-size:calc(13px / var(--z));font-weight:500;fill:var(--ink)}
+.t3{font-size:calc(11px / var(--z));font-weight:500;fill:var(--muted)}
+.tl{font-size:calc(11.5px / var(--z));font-style:italic;font-weight:500;fill:var(--lake);stroke:var(--water)}
+.m-country{font-family:var(--sans);font-weight:600;font-size:calc(15px / var(--z));letter-spacing:.32em;fill:var(--muted);opacity:.6}
+.m-sea{font-family:var(--sans);font-style:italic;font-size:calc(13px / var(--z));fill:var(--lake)}
+.shield rect{fill:var(--lake)}
+.shield text{fill:var(--bg);font:600 10px var(--sans)}
+.van-body{fill:var(--lake);stroke:var(--bg);stroke-width:1.6}
+.van-win{fill:var(--bg)}
+.van-wheel{fill:var(--ink)}
+.van-roof{fill:var(--route)}
+
+/* Barra de progreso de lectura */
+.progress{position:fixed;left:0;right:0;top:0;z-index:40;height:calc(env(safe-area-inset-top,0px) + 4px);padding-top:env(safe-area-inset-top,0px);background:color-mix(in srgb,var(--bg) 70%,transparent);pointer-events:none}
+.progress i{display:block;height:4px;background:linear-gradient(90deg,var(--lake),var(--route));transform-origin:left;transform:scaleX(0);border-radius:0 2px 2px 0}
+
+/* Fotos en los capítulos */
+.ph{margin:4px 0 0;display:flex;flex-direction:column;gap:8px;max-width:520px}
+.ph-main{display:block;width:100%;aspect-ratio:3/2;border:0;padding:0;border-radius:14px;overflow:hidden;cursor:zoom-in;background:var(--line)}
+.ph-main img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .8s cubic-bezier(.2,.8,.2,1)}
+.ph-main:hover img{transform:scale(1.03)}
+.ph-row{display:flex;gap:8px;align-items:center}
+.ph-thumb{width:56px;height:42px;border:0;padding:0;border-radius:8px;overflow:hidden;cursor:pointer;opacity:.85;flex:0 0 auto;background:var(--line)}
+.ph-thumb:hover{opacity:1}
+.ph-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.ph figcaption{font-size:.88rem;color:var(--muted);flex:1;min-width:0}
+/* Pines con foto en el mapa */
+.pin{cursor:pointer;transition:opacity .35s}
+.pin .ring{fill:var(--bg);stroke:var(--lake);stroke-width:2.5}
+.pin.on .ring{stroke:var(--route);stroke-width:3.5}
+.pin .tip{fill:var(--bg);stroke:var(--lake);stroke-width:2.5;stroke-linejoin:round}
+.pin.on .tip{stroke:var(--route)}
+.pin:focus{outline:none}.pin:focus-visible .ring{stroke:var(--glacier);stroke-width:4}
+/* Visor de fotos */
+.lb{position:fixed;inset:0;z-index:50;background:color-mix(in srgb,#06120f 90%,transparent);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:calc(env(safe-area-inset-top,0px) + 56px) 16px calc(env(safe-area-inset-bottom,0px) + 24px)}
+.lb img{max-width:min(1200px,100%);max-height:72vh;border-radius:12px;display:block;object-fit:contain}
+.lb p{color:#E4F1EC;font-size:1rem;text-align:center;max-width:60ch}
+.lb p span{color:#A3C3B8;font-size:.88rem;margin-left:8px;font-variant-numeric:tabular-nums}
+.lb button{position:absolute;border:0;border-radius:50%;width:46px;height:46px;background:rgba(228,241,236,.14);color:#E4F1EC;cursor:pointer;display:grid;place-items:center;font:600 1.3rem var(--sans)}
+.lb button:hover{background:rgba(228,241,236,.26)}
+.lb .x{top:calc(env(safe-area-inset-top,0px) + 12px);right:16px}
+.lb .prev{left:16px;top:50%;transform:translateY(-50%)}
+.lb .next{right:16px;top:50%;transform:translateY(-50%)}
+@media (max-width:600px){.lb .prev,.lb .next{top:auto;bottom:calc(env(safe-area-inset-bottom,0px) + 16px);transform:none}}
+
+/* ---------- Acto 3 ---------- */
+.edge{display:block;width:100%;height:clamp(50px,7vw,110px);margin-bottom:-1px}
+.edge path{fill:var(--band)}
+.band{background:var(--band);color:var(--band-ink)}
+.block{display:flex;flex-direction:column;gap:clamp(28px,4vw,48px)}
+.block h2{font-size:clamp(2.6rem,6vw,4.5rem);max-width:15ch}
+.block .intro{max-width:56ch;font-size:1.08rem;margin-top:-10px}
+.lakes-block{padding-block:clamp(48px,7vw,96px) clamp(96px,10vw,140px)}
+.lakes-block h2{color:var(--band-ink)}
+.lakes-block .intro{color:var(--band-muted)}
+.lakes{display:flex;flex-wrap:wrap;align-items:flex-end;gap:clamp(28px,4vw,56px) clamp(24px,3.5vw,52px)}
+.lk{display:flex;flex-direction:column;gap:10px;max-width:100%}
+.lk svg{display:block;max-width:100%;height:auto;overflow:visible}
+.lk path{fill:var(--band-lake);stroke:var(--band-ink);stroke-opacity:.5;stroke-width:1}
+.lk b{font-weight:600;font-size:1.12rem}
+.lk span{font-size:.92rem;color:var(--band-muted);max-width:24ch}
+.lakes-note{font-size:.9rem;color:var(--band-muted)}
+
+.money-block{padding-block:clamp(110px,12vw,170px)}
+.money-block h2,.pack-block h2,.decide h2{color:var(--forest)}
+.money{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(44px,7vw,110px);align-items:start}
+.big{font-family:var(--slab);font-size:clamp(4.5rem,11vw,9rem);line-height:.85;color:var(--lake);font-variant-numeric:tabular-nums}
+.big-cap{margin-top:14px;color:var(--muted);font-weight:500}
+.stack{display:flex;height:26px;border-radius:7px;overflow:hidden;margin-top:30px;gap:3px}
+.stack div{height:100%;display:flex;align-items:center;padding-left:8px;font-size:.75rem;font-weight:600;color:var(--bg);white-space:nowrap;overflow:hidden}
+.ticket{margin-top:22px;display:flex;flex-direction:column;gap:2px;font-variant-numeric:tabular-nums}
+.ticket div{display:flex;align-items:baseline;gap:10px;padding-block:6px}
+.ticket .k{width:10px;height:10px;border-radius:2px;flex:0 0 auto;align-self:center}
+.ticket .lead{flex:1;border-bottom:2px dotted var(--line);transform:translateY(-4px)}
+.ticket b{font-weight:600}
+.ticket .sum{border-top:2px solid var(--ink);margin-top:6px;padding-top:10px;font-weight:600}
+.versus{display:flex;flex-direction:column;gap:26px}
+.versus h3{font-size:clamp(1.6rem,2.6vw,2rem);color:var(--forest)}
+.vs{display:flex;flex-direction:column;gap:8px}
+.vs .lab{display:flex;justify-content:space-between;gap:12px;font-weight:600}
+.vs .lab span{font-variant-numeric:tabular-nums}
+.vs-track{position:relative;height:16px;border-radius:999px;background:color-mix(in srgb,var(--line) 55%,transparent)}
+.vs-fill{position:absolute;left:0;top:0;bottom:0;border-radius:999px}
+.vs-ext{position:absolute;top:0;bottom:0;border-radius:0 999px 999px 0;background:repeating-linear-gradient(-45deg,var(--glacier) 0 4px,transparent 4px 8px);opacity:.75}
+.vs .note{font-size:.93rem;color:var(--muted)}
+.save{font-size:1.1rem;max-width:44ch}
+
+.pack-block{padding-block:clamp(72px,8vw,100px)}
+.pack{columns:2;column-gap:clamp(32px,6vw,90px);margin:0;padding:0;list-style:none;font-size:1.08rem;max-width:1000px}
+.pack li{break-inside:avoid;padding-block:11px;display:grid;grid-template-columns:24px 1fr;gap:10px;align-items:baseline;border-bottom:1px solid var(--line)}
+.pack li::before{content:"";width:13px;height:7px;border-left:3px solid var(--route);border-bottom:3px solid var(--route);transform:rotate(-45deg) translateY(-3px)}
+
+.decide{padding-block:clamp(96px,10vw,130px) clamp(80px,9vw,120px)}
+.cal-wrap{overflow-x:auto;padding-bottom:6px}
+.cal{display:grid;grid-template-columns:repeat(31,minmax(20px,1fr));gap:3px 3px;min-width:660px;font-variant-numeric:tabular-nums}
+.cal .wk{font-size:.72rem;color:var(--muted);text-align:center}
+.cal .dn{font-size:.9rem;font-weight:600;text-align:center;padding-block:8px;border-radius:6px;color:var(--ink);background:color-mix(in srgb,var(--line) 40%,transparent);transition:background .3s,color .3s}
+.cal .dn.we{color:var(--forest)}
+.cal .dn.sel{background:var(--route);color:var(--bg)}
+.cal .band-opt{position:relative;display:flex;align-items:center;gap:10px;margin-top:6px;padding:10px 14px;border-radius:10px;border:2px solid var(--line);cursor:pointer;font-weight:600;font-size:.95rem;line-height:1.25;transition:border-color .25s,background .25s}
+.cal .band-opt span small{display:block;font-weight:400;color:var(--muted);font-size:.85rem}
+.cal .band-opt input{accent-color:var(--route);width:18px;height:18px;flex:0 0 auto;margin:0}
+.cal .band-opt:has(input:checked){border-color:var(--route);background:color-mix(in srgb,var(--route) 10%,transparent)}
+.todo{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 clamp(32px,6vw,90px);max-width:1000px}
+.check{display:flex;gap:14px;align-items:flex-start;padding-block:14px;border-bottom:1px solid var(--line);cursor:pointer}
+.check input{width:22px;height:22px;margin-top:3px;accent-color:var(--route);flex:0 0 auto}
+.check b{font-weight:600}
+.check small{display:block;color:var(--muted);font-size:.92rem}
+.check input:checked + div{color:var(--muted);text-decoration:line-through}
+footer.band{padding-block:24px 64px;font-size:.92rem;color:var(--band-muted)}
+footer p{max-width:72ch}
+
+@media (max-width:860px){
+  .ask{grid-template-columns:1fr}
+  .journey{grid-template-columns:1fr;gap:0}
+  .mapcol{order:-1;top:env(safe-area-inset-top,0px);height:min(48vh,360px);z-index:3;background:var(--bg);padding-block:6px 8px;margin-inline:calc(-1 * clamp(16px,5vw,72px));padding-inline:clamp(16px,5vw,72px)}
+  .odo{min-height:0;font-size:.88rem}.odo b{font-size:1.5rem}
+  .chapter{min-height:68vh}
+  .money,.todo{grid-template-columns:1fr}
+  .pack{columns:1}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .scroll-cue i{animation:none}
+}
+</style>
+</head>
+<body>
+
+
+<div lang="es">
+<div class="progress" aria-hidden="true"><i id="progressBar"></i></div>
+<header class="hero" id="top">
+  <svg id="peaks" viewBox="0 0 1440 800" preserveAspectRatio="xMaxYMax slice" aria-hidden="true"></svg>
+  <div class="hero-title gutter">
+    <h1 id="title"><span class="ln"><span>Rumbo</span></span><span class="ln"><span>al Sur</span></span></h1>
+    <p class="sub">Bariloche, los 7 Lagos y el Lácar, en auto desde Montevideo. Segunda quincena de enero de 2027.</p>
+  </div>
+  <a class="scroll-cue" href="#pedido"><span>Bajá</span><i></i></a>
+</header>
+
+<section class="ask gutter" id="pedido" aria-label="Lo que necesitamos de cada uno">
+  <div>
+    <p class="say">Para ir necesitamos de cada uno <b>5 días</b> de licencia y unos <b>US$700</b>. Cuantos más nos sumemos, mejor.</p>
+    <p class="small">Salimos un viernes de tarde y volvemos el domingo de la semana siguiente. Abajo está el viaje día por día: el mapa te sigue mientras leés.</p>
+  </div>
+  <div class="strip" aria-label="Los 10 días del viaje">
+    <div class="strip-days" id="strip"></div>
+    <p><b>Nueve noches, cinco en el sur.</b> En gris, los días de ruta; en verde, los días allá.</p>
+  </div>
+</section>
+
+<section class="journey gutter" aria-label="El viaje día por día">
+  <div class="chapters" id="chapters"></div>
+  <div class="mapcol">
+    <p class="odo" aria-hidden="true"><b id="odoKm">0</b> km recorridos, <span id="odoDay">día 1 de 10</span></p>
+    <div class="map-frame" id="frame">
+      <svg id="map" role="img" aria-label="Mapa del recorrido: de Montevideo a Bariloche por Santa Rosa y Neuquén, los 7 Lagos hasta Quila Quina y la vuelta por Santa Rosa y Gualeguaychú"></svg>
+      <button class="tour" id="tour" type="button" aria-label="Recorrer el viaje solo"><svg viewBox="0 0 16 16" aria-hidden="true"><path id="tourIcon" d="M4 2.5v11l9-5.5z" fill="currentColor"/></svg></button>
+    </div>
+  </div>
+</section>
+
+<svg class="edge" viewBox="0 0 1440 110" preserveAspectRatio="none" aria-hidden="true"><path id="edge1"/></svg>
+<section class="band block lakes-block gutter" aria-labelledby="h-lagos">
+  <h2 id="h-lagos">Dónde nos metemos al agua</h2>
+  <p class="intro">Agua de deshielo, fría y transparente. Todos quedan sobre el camino, y acá están dibujados a la misma escala.</p>
+  <div class="lakes" id="lakes"></div>
+</section>
+
+<section class="block money-block gutter" aria-labelledby="h-plata">
+  <h2 id="h-plata">Lo que sale</h2>
+  <div class="money">
+    <div>
+      <div class="big" id="total">US$700</div>
+      <p class="big-cap">Por persona, todo incluido, calculado con 4 personas por auto.</p>
+      <div class="stack" id="stack" role="img" aria-label="Reparto del presupuesto por rubro"></div>
+      <div class="ticket" id="ticket"></div>
+    </div>
+    <div class="versus">
+      <h3>Por qué en auto</h3>
+      <div class="vs">
+        <div class="lab"><span>En auto, los nuestros</span><span>US$230</span></div>
+        <div class="vs-track"><div class="vs-fill" style="width:32.9%;background:var(--route)"></div></div>
+        <p class="note">Nafta, peajes, carta verde y dos noches de parada en ruta. Dormimos en Paso del Puerto y El Retiro.</p>
+      </div>
+      <div class="vs">
+        <div class="lab"><span>Buquebus y avión low cost</span><span>US$545–670</span></div>
+        <div class="vs-track"><div class="vs-fill" style="width:77.9%;background:var(--glacier)"></div><div class="vs-ext" style="left:77.9%;width:17.8%"></div></div>
+        <p class="note">Más el auto de alquiler en el mes más caro del año y la valija paga.</p>
+      </div>
+      <p class="save">Ahorramos entre <b>US$300 y US$450 por persona</b>. A cambio pasamos 5 noches en el sur en vez de 7, con lugar en los autos para carpas, comida y lo que queramos llevar.</p>
+    </div>
+  </div>
+</section>
+
+<section class="block pack-block gutter" aria-labelledby="h-valija">
+  <h2 id="h-valija">La valija</h2>
+  <ul class="pack">
+    <li>Carpa, una cada 2 o 3 personas</li>
+    <li>Bolsa de dormir para 0 °C y aislante</li>
+    <li>Anafe, garrafa, ollas y linterna frontal</li>
+    <li>Campera impermeable y abrigo para la noche</li>
+    <li>Calzado de trekking y mochila chica</li>
+    <li>Traje de baño, toalla y birken o chancletas</li>
+    <li>Protector solar 50, lentes y gorro</li>
+    <li>Termo, mate y conservadora</li>
+    <li>Cédula o pasaporte y libreta</li>
+    <li>Por auto: carta verde, título y autorización si no maneja el dueño</li>
+  </ul>
+</section>
+
+<section class="block decide gutter" aria-labelledby="h-decidir">
+  <h2 id="h-decidir">Lo que decidimos hoy</h2>
+  <p class="intro" style="color:var(--muted)">Primero la fecha: elegila en enero y los días del viaje de arriba se actualizan.</p>
+  <div class="cal-wrap"><div class="cal" id="cal" role="radiogroup" aria-label="Fecha del viaje"></div></div>
+  <div class="todo" id="todo"></div>
+</section>
+
+<svg class="edge" viewBox="0 0 1440 110" preserveAspectRatio="none" aria-hidden="true"><path id="edge2"/></svg>
+<div class="lb" id="lb" hidden role="dialog" aria-modal="true" aria-label="Foto ampliada">
+  <img id="lbImg" alt="">
+  <p id="lbCap"></p>
+  <button class="x" id="lbX" type="button" aria-label="Cerrar">✕</button>
+  <button class="prev" id="lbPrev" type="button" aria-label="Foto anterior">‹</button>
+  <button class="next" id="lbNext" type="button" aria-label="Foto siguiente">›</button>
+</div>
+<footer class="band gutter"><p>Precios estimados a octubre de 2026, con el dólar a unos 1.540 pesos argentinos; pueden cambiar hasta enero. En enero se llenan los campings, las casas grandes y los hoteles de ruta, así que conviene reservar apenas cerremos la lista.</p></footer>
+</div>
+
+<script>
+(function(){
+  const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const NS='http://www.w3.org/2000/svg';
+  const mk=(tag,attrs,parent)=>{const n=document.createElementNS(NS,tag);for(const k in attrs)n.setAttribute(k,attrs[k]);if(parent)parent.appendChild(n);return n;};
+  const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+  const ease=k=>k<.5?2*k*k:1-Math.pow(-2*k+2,2)/2;
+  const lerp=(a,b,t)=>a+(b-a)*t;
+  // Curva suave cerrada (Catmull-Rom a Bézier)
+  function smoothClosed(p){
+    const n=p.length;let d=`M${p[0][0].toFixed(2)} ${p[0][1].toFixed(2)}`;
+    for(let i=0;i<n;i++){const p0=p[(i-1+n)%n],p1=p[i],p2=p[(i+1)%n],p3=p[(i+2)%n];
+      const c1=[p1[0]+(p2[0]-p0[0])/6,p1[1]+(p2[1]-p0[1])/6],c2=[p2[0]-(p3[0]-p1[0])/6,p2[1]-(p3[1]-p1[1])/6];
+      d+=` C${c1[0].toFixed(2)} ${c1[1].toFixed(2)} ${c2[0].toFixed(2)} ${c2[1].toFixed(2)} ${p2[0].toFixed(2)} ${p2[1].toFixed(2)}`;}
+    return d+'Z';
+  }
+
+  /* ============ ACTO 1: HERO ============ */
+  const peaks=document.getElementById('peaks');
+  const defs=mk('defs',{},peaks);
+  const rg=mk('radialGradient',{id:'glow',cx:'78%',cy:'30%',r:'45%'},defs);
+  mk('stop',{offset:'0','stop-color':'var(--snow)','stop-opacity':'.75'},rg);
+  mk('stop',{offset:'1','stop-color':'var(--snow)','stop-opacity':'0'},rg);
+  mk('rect',{x:0,y:0,width:1440,height:800,fill:'url(#glow)'},peaks);
+  const poly=(pts,close)=>'M'+pts.map(p=>p[0].toFixed(1)+' '+p[1].toFixed(1)).join(' L')+(close?` L${pts[pts.length-1][0]} 1300 L${pts[0][0]} 1300 Z`:'');
+  // Cordillera lejana: agujas del Catedral a la derecha
+  const far=[[-20,560],[80,530],[160,545],[240,500],[320,520],[400,480],[470,505],[540,470],[610,490],[680,445],[740,470],[800,420],[850,445],[895,385],[915,420],[940,360],[958,398],[978,345],[996,390],[1016,338],[1036,385],[1056,350],[1080,400],[1130,380],[1190,420],[1260,395],[1330,430],[1460,410]];
+  // Cordón medio
+  let seed=23; const rnd=()=>{seed=(seed*16807)%2147483647;return seed/2147483647;};
+  const mid=[]; for(let x=-20;x<=1460;x+=20){mid.push([x,600-70*(.55*Math.sin(x/190+1.3)+.3*Math.sin(x/83)+.15*Math.sin(x/37))-(rnd()-.5)*18-Math.max(0,x-900)*.12]);}
+  // Perfil de la ruta: llano desde Montevideo, sube hacia la cordillera
+  const prof=[]; for(let x=-20;x<=1460;x+=10){const rise=x<980?0:Math.pow((x-980)/460,1.6)*190; prof.push([x,672-rise-4*Math.sin(x/53)-(x>980?(rnd()-.5)*16:0)]);}
+  const L=[];
+  const gFar=mk('g',{class:'layer'},peaks); mk('path',{d:poly(far,1),fill:'var(--far)'},gFar);
+  const cp=mk('clipPath',{id:'snow'},defs); mk('path',{d:poly(far,1)},cp);
+  mk('rect',{x:0,y:0,width:1440,height:432,fill:'var(--snow)','clip-path':'url(#snow)'},gFar);
+  const gMid=mk('g',{class:'layer'},peaks); mk('path',{d:poly(mid,1),fill:'var(--mid)'},gMid);
+  const gNear=mk('g',{class:'layer'},peaks); mk('path',{d:poly(prof,1),fill:'var(--near)'},gNear);
+  const routeLine=mk('path',{d:poly(prof.map(p=>[p[0],p[1]-3]),0),fill:'none',stroke:'var(--route)','stroke-width':4,'stroke-linecap':'round'},gNear);
+  const mvdX=60, brcX=1310, py=x=>prof.reduce((a,p)=>Math.abs(p[0]-x)<Math.abs(a[0]-x)?p:a)[1];
+  mk('circle',{cx:mvdX,cy:py(mvdX)-3,r:7,fill:'var(--snow)',stroke:'var(--route)','stroke-width':3},gNear);
+  mk('circle',{cx:brcX,cy:py(brcX)-3,r:7,fill:'var(--snow)',stroke:'var(--route)','stroke-width':3},gNear);
+  const lab=(s,x,y,a)=>{const t=mk('text',{x,y,'text-anchor':a,fill:'var(--snow)','font-family':'Instrument Sans, system-ui, sans-serif','font-weight':600,'font-size':20},gNear);t.textContent=s;};
+  lab('Montevideo',mvdX-8,py(mvdX)-20,'start'); lab('Bariloche',brcX,py(brcX)-22,'middle');
+  const gLake=mk('g',{class:'layer'},peaks);
+  mk('rect',{x:-20,y:705,width:1480,height:600,fill:'var(--hero-water)'},gLake);
+  for(let i=0;i<9;i++){const y=724+i*10,x=(i*173)%1100;mk('line',{x1:x,x2:x+110+i*14,y1:y,y2:y,stroke:'var(--glacier)','stroke-width':2,'stroke-linecap':'round',opacity:.5},gLake);}
+  const heroLayers=[gFar,gMid,gNear,gLake], ks=[.45,.3,.15,0];
+  const heroEl=document.querySelector('.hero');
+  function heroParallax(){ if(reduce) return; const y=scrollY; if(y>heroEl.offsetHeight) return;
+    heroLayers.forEach((g,i)=>g.style.transform=`translateY(${(y*ks[i]).toFixed(1)}px)`); }
+  if(!reduce){
+    heroLayers.forEach((g,i)=>g.animate([{transform:`translateY(${90-i*18}px)`},{transform:'translateY(0)'}],{duration:1500,delay:i*120,easing:'cubic-bezier(.2,.8,.2,1)'}));
+    document.querySelectorAll('#title .ln>span').forEach((s,i)=>s.animate([{transform:'translateY(105%)'},{transform:'none'}],{duration:1000,delay:250+i*140,easing:'cubic-bezier(.2,.8,.2,1)',fill:'backwards'}));
+    const len=routeLine.getTotalLength(); routeLine.style.strokeDasharray=len;
+    routeLine.animate([{strokeDashoffset:len},{strokeDashoffset:0}],{duration:2500,delay:600,easing:'cubic-bezier(.65,0,.35,1)',fill:'backwards'});
+  }
+  // Bordes de cresta para las bandas
+  function edgePath(s){seed=s;let d='M0 110';for(let x=0;x<=1440;x+=24){d+=` L${x} ${(58-28*Math.sin(x/150+s)-16*Math.sin(x/61)-(rnd()-.5)*20).toFixed(1)}`;}return d+' L1440 110 Z';}
+  document.getElementById('edge1').setAttribute('d',edgePath(5));
+  document.getElementById('edge2').setAttribute('d',edgePath(11));
+
+  /* ============ Tira de 10 días ============ */
+  const WD=['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+  const kinds=['','','half-in','sur','sur','sur','sur','half-out','',''];
+  const stripEl=document.getElementById('strip');
+  stripEl.innerHTML=kinds.map((k,i)=>`<div><i class="${k}"></i><span>${WD[(5+i)%7].slice(0,1)}</span></div>`).join('');
+
+  /* ============ ACTO 2: MAPA ============ */
+  const svg=document.getElementById('map'), frame=document.getElementById('frame');
+  const X=lon=>(lon+73.2)*62, Y=lat=>(-32.3-lat)*78, xy=([la,lo])=>[X(lo),Y(la)];
+  const pts=a=>a.map(p=>xy(p).map(v=>v.toFixed(2)).join(',')).join(' ');
+  const line=a=>a.map(p=>p[0].toFixed(2)+','+p[1].toFixed(2)).join(' ');
+
+  // Grilla
+  const g=mk('g',{},svg);
+  for(let la=-28;la>=-46;la--) mk('line',{class:'m-grid',x1:-600,x2:1700,y1:Y(la),y2:Y(la)},g);
+  for(let lo=-80;lo<=-50;lo+=2) mk('line',{class:'m-grid',y1:-500,y2:1300,x1:X(lo),x2:X(lo)},g);
+  // Chile (lado oeste de la cordillera)
+  const crest=[]; for(let la=-28;la>=-46;la-=0.25) crest.push([la,-71.95+0.25*Math.sin(la*3.1)+0.12*Math.sin(la*7.7)]);
+  mk('polygon',{class:'m-chile',points:pts([[-28,-82],...crest,[-46,-82]])},svg);
+  // Río de la Plata y Atlántico
+  mk('polygon',{class:'m-water',points:pts([
+    [-34.0,-58.45],[-34.45,-57.85],[-34.47,-57.4],[-34.75,-56.75],[-34.9,-56.2],[-34.95,-55.0],[-34.6,-53.4],[-33.5,-52.6],[-32.0,-51.0],[-28,-48.5],[-28,-45],
+    [-47,-45],[-47,-66.5],[-45,-67.0],[-42.6,-65.0],[-41.8,-65.1],[-40.8,-64.9],[-41.15,-63.8],[-40.8,-63.0],[-40.55,-62.25],
+    [-39.9,-62.1],[-39.3,-62.0],[-38.75,-62.25],[-38.95,-61.4],[-38.9,-60.5],[-38.55,-58.7],[-38.0,-57.5],
+    [-37.4,-57.1],[-37.0,-56.9],[-36.3,-56.75],[-35.4,-57.15],[-34.9,-57.9],[-34.6,-58.37],[-34.3,-58.55]])},svg);
+  // Ríos
+  mk('polyline',{class:'m-river wide',points:pts([[-28,-56.5],[-30.2,-57.6],[-32.3,-58.08],[-32.8,-58.15],[-33.12,-58.33],[-33.6,-58.42],[-34.0,-58.45]])},svg);
+  mk('polyline',{class:'m-river',points:pts([[-41.04,-71.17],[-40.75,-71.05],[-40.55,-70.6],[-40.2,-70.1],[-39.6,-69.3],[-39.25,-68.9],[-38.98,-68.05]])},svg); // Limay
+  mk('polyline',{class:'m-river',points:pts([[-38.98,-68.05],[-39.1,-67.3],[-39.15,-66.2],[-39.4,-65.5],[-40.1,-64.4],[-40.7,-63.5],[-41.0,-62.8]])},svg); // Negro
+  mk('polyline',{class:'m-river',points:pts([[-36.9,-70.2],[-37.4,-69.0],[-37.85,-67.75],[-38.4,-66.2],[-38.99,-64.1],[-39.5,-62.9],[-39.85,-62.15]])},svg); // Colorado
+  // Cordillera como sombreado de hachuras
+  const hg=mk('g',{},svg);
+  for(let la=-28;la>=-46;la-=0.075){const c=-71.95+0.25*Math.sin(la*3.1)+0.12*Math.sin(la*7.7), k=Math.round(la/0.075)%3;
+    const len=[0.55,0.32,0.42][(k+3)%3]; mk('line',{class:'m-hach',x1:X(c-0.05),y1:Y(la),x2:X(c+len),y2:Y(la-0.04)},hg);}
+
+  // Lagos
+  const LAKES={
+    'Nahuel Huapi':[[-41.06,-71.19],[-41.11,-71.28],[-41.10,-71.38],[-41.08,-71.45],[-41.04,-71.52],[-41.08,-71.60],[-41.06,-71.68],[-41.0,-71.78],[-40.93,-71.85],[-40.87,-71.84],[-40.85,-71.76],[-40.80,-71.70],[-40.78,-71.63],[-40.81,-71.56],[-40.84,-71.48],[-40.88,-71.40],[-40.92,-71.33],[-40.96,-71.26],[-41.01,-71.21]],
+    'Gutiérrez':[[-41.135,-71.405],[-41.15,-71.395],[-41.19,-71.385],[-41.23,-71.39],[-41.25,-71.405],[-41.24,-71.425],[-41.20,-71.42],[-41.16,-71.425]],
+    'Mascardi':[[-41.27,-71.60],[-41.30,-71.55],[-41.33,-71.52],[-41.37,-71.49],[-41.39,-71.50],[-41.37,-71.535],[-41.34,-71.56],[-41.32,-71.60],[-41.29,-71.64]],
+    'Lácar':[[-40.145,-71.36],[-40.155,-71.40],[-40.17,-71.46],[-40.185,-71.53],[-40.20,-71.60],[-40.20,-71.66],[-40.185,-71.665],[-40.175,-71.58],[-40.16,-71.50],[-40.14,-71.43],[-40.13,-71.38]],
+    'Traful':[[-40.60,-71.33],[-40.62,-71.42],[-40.635,-71.50],[-40.65,-71.57],[-40.655,-71.61],[-40.645,-71.62],[-40.635,-71.55],[-40.615,-71.47],[-40.60,-71.40],[-40.59,-71.34]],
+    'Espejo':[[-40.60,-71.73],[-40.63,-71.71],[-40.665,-71.73],[-40.69,-71.77],[-40.67,-71.80],[-40.63,-71.79],[-40.605,-71.76]],
+    'Correntoso':[[-40.665,-71.635],[-40.70,-71.63],[-40.73,-71.645],[-40.745,-71.67],[-40.725,-71.685],[-40.69,-71.675],[-40.67,-71.66]],
+    'Villarino':[[-40.445,-71.54],[-40.46,-71.53],[-40.48,-71.55],[-40.485,-71.575],[-40.465,-71.585],[-40.45,-71.565]],
+    'Falkner':[[-40.40,-71.535],[-40.41,-71.505],[-40.43,-71.50],[-40.445,-71.515],[-40.44,-71.54],[-40.425,-71.56],[-40.405,-71.555]],
+    'Machónico':[[-40.335,-71.46],[-40.35,-71.45],[-40.37,-71.465],[-40.365,-71.485],[-40.345,-71.49],[-40.33,-71.475]]
+  };
+  const labels=[]; // {el,x,y,dx,dy,pri,min}
+  const addLabel=(s,x,y,cls,o)=>{const el=mk('text',Object.assign({x,y,class:'m-l '+cls},o.attrs||{}),svg);el.textContent=s;labels.push({el,x,y,dx:o.dx||0,dy:o.dy||0,pri:o.pri,min:o.min||0});return el;};
+  Object.entries(LAKES).forEach(([name,ps])=>{
+    mk('path',{class:'m-lake',d:smoothClosed(ps.map(xy))},svg);
+    const c=ps.reduce((a,p)=>[a[0]+p[0]/ps.length,a[1]+p[1]/ps.length],[0,0]),[cx,cy]=xy(c);
+    const big=name==='Nahuel Huapi'||name==='Lácar'||name==='Traful';
+    addLabel(name,cx,cy,'tl',{dx:big?0:10,dy:4,pri:5,min:2.4,attrs:{'text-anchor':big?'middle':'start'}});
+  });
+  [['URUGUAY',-32.75,-56.9],['ARGENTINA',-34.6,-66.4],['CHILE',-37.2,-72.7]].forEach(([s,la,lo])=>{const t=mk('text',{x:X(lo),y:Y(la),class:'m-country','text-anchor':'middle'},svg);t.textContent=s;});
+  [['Río de la Plata',-35.15,-56.9],['Océano Atlántico',-40.2,-59.4]].forEach(([s,la,lo])=>{const t=mk('text',{x:X(lo),y:Y(la),class:'m-sea','text-anchor':'middle'},svg);t.textContent=s;});
+
+  // Ruta
+  const P={
+    mvd:[-34.90,-56.19],pdp:[-33.05,-57.10],fb:[-33.12,-58.30],gch:[-33.01,-58.52],zar:[-34.10,-59.03],luj:[-34.57,-59.11],
+    sro:[-36.62,-64.29],acha:[-37.38,-64.60],chach:[-37.37,-65.65],v25:[-37.77,-67.72],nqn:[-38.95,-68.06],choc:[-39.26,-68.82],
+    pda:[-40.05,-70.07],ccura:[-40.35,-70.70],conf:[-40.67,-71.06],dina:[-41.07,-71.14],brc:[-41.13,-71.31],
+    n1:[-40.95,-71.20],n2:[-40.83,-71.45],vla:[-40.76,-71.65],corr:[-40.70,-71.62],n3:[-40.66,-71.665],esp:[-40.62,-71.69],vill:[-40.47,-71.52],
+    falk:[-40.43,-71.49],mach:[-40.35,-71.44],s1:[-40.22,-71.37],sma:[-40.157,-71.35],s2:[-40.18,-71.40],qq:[-40.19,-71.45],jun:[-39.95,-71.07]
+  };
+  const ida=['mvd','pdp','fb','gch','zar','luj','sro','acha','chach','v25','nqn','choc','pda','ccura','conf','dina','brc','dina','n1','n2','vla','corr','n3','esp','vill','falk','mach','s1','sma','s2','qq'];
+  const vuelta=['qq','s2','sma','jun','ccura','pda','choc','nqn','v25','chach','acha','sro','luj','zar','gch','fb','mvd'];
+  const full=ida.concat(vuelta.slice(1));
+  const route=full.map(k=>xy(P[k]));
+  mk('polyline',{class:'m-base',points:line(route.slice(0,ida.length))},svg);
+  mk('polyline',{class:'m-back',points:line(route.slice(ida.length-1))},svg);
+  const done=mk('polyline',{class:'m-done',points:''},svg);
+
+  const SP={frey:[P.brc,[-41.15,-71.40],[-41.17,-71.44],[-41.20,-71.48]].map(xy),manso:[P.brc,[-41.20,-71.36],[-41.33,-71.47],[-41.45,-71.55],[-41.60,-71.62]].map(xy)};
+  const cumOf=p=>{const c=[0];for(let i=1;i<p.length;i++)c.push(c[i-1]+Math.hypot(p[i][0]-p[i-1][0],p[i][1]-p[i-1][1]));return c;};
+  const SPC={frey:cumOf(SP.frey),manso:cumOf(SP.manso)};
+  mk('polyline',{class:'m-spur',points:line(SP.frey)},svg); mk('polyline',{class:'m-spur',points:line(SP.manso)},svg);
+  const spurDone={frey:mk('polyline',{class:'m-spur-done',points:''},svg),manso:mk('polyline',{class:'m-spur-done',points:''},svg)};
+
+  // Escudos de ruta
+  const shields=[];
+  const shield=(s,la,lo,min,max)=>{const gg=mk('g',{class:'shield'},svg);const w=s.length*6.2+12;mk('rect',{x:-w/2,y:-8,width:w,height:16,rx:4},gg);const t=mk('text',{x:0,y:3.6,'text-anchor':'middle'},gg);t.textContent=s;shields.push({g:gg,x:X(lo),y:Y(la),min:min||0,max:max||99});};
+  shield('Ruta 3',-33.6,-56.75,0,2); shield('RN 14',-33.6,-58.75,0,2); shield('RN 5',-35.7,-62.0,0,2); shield('RP 20',-37.55,-66.7,0,2); shield('RN 237',-39.6,-69.55,0,2.6); shield('RN 40',-40.55,-71.43,2.4,99);
+
+  // Paradas: tier 1 extremos, 2 donde dormimos, 3 de paso
+  const dots=[];
+  const dot=(p,cls,r)=>{const c=mk('circle',{class:cls,cx:p[0],cy:p[1],r},svg);dots.push([c,r]);return c;};
+  const freyDot=dot(SP.frey[3],'m-poi',4.5), mansoDot=dot(SP.manso[4],'m-poi',4.5);
+  addLabel('Refugio Frey',SP.frey[3][0],SP.frey[3][1],'t3',{dx:-8,dy:14,pri:4,min:2.4,attrs:{'text-anchor':'end'}});
+  addLabel('Rafting en el Manso',SP.manso[4][0],SP.manso[4][1],'t3',{dx:9,dy:4,pri:4,min:2.4});
+  const stops=[
+    ['mvd','Montevideo',1,9,18,'home'],['pdp','Paso del Puerto',2,10,-9,'home'],['fb','Fray Bentos',3,-8,20,'','end'],
+    ['gch','El Retiro, Gualeguaychú',2,-10,-9,'home','end'],['luj','Luján',3,-9,4,'','end'],['sro','Santa Rosa (a definir)',2,10,-9],
+    ['acha','Gral. Acha',3,-8,18,'','end'],['v25','25 de Mayo',3,10,-8],['nqn','Neuquén',3,10,-7],
+    ['pda','Piedra del Águila',3,10,4],['brc','Bariloche',1,11,15],['vla','Villa La Angostura',3,9,14],
+    ['sma','San Martín de los Andes',3,9,-6],['qq','Quila Quina',1,-10,13,'home','end']
+  ];
+  stops.forEach(([k,name,tier,dx,dy,cls,anchor])=>{
+    const [x,y]=xy(P[k]); dot([x,y],'m-stop'+(cls?' '+cls:''),tier===1?6:tier===2?5:3.5);
+    addLabel(name,x,y,'t'+tier,{dx,dy,pri:tier,min:tier===3?1.45:0,attrs:anchor?{'text-anchor':anchor}:{}});
+  });
+
+  // Van
+  const van=mk('g',{},svg), vb=mk('g',{},van);
+  mk('rect',{class:'van-roof',x:-10,y:-15,width:18,height:4,rx:2},vb);
+  mk('rect',{class:'van-body',x:-15,y:-11,width:30,height:15,rx:4},vb);
+  mk('rect',{class:'van-win',x:4,y:-8,width:8,height:6,rx:1.5},vb);
+  mk('rect',{class:'van-win',x:-11,y:-8,width:12,height:6,rx:1.5},vb);
+  mk('circle',{class:'van-wheel',cx:-8,cy:5,r:3.6},vb); mk('circle',{class:'van-wheel',cx:8,cy:5,r:3.6},vb);
+
+  const cum=cumOf(route);
+  const along=(p,c,d)=>{d=clamp(d,0,c[c.length-1]);let i=1;while(i<c.length-1&&c[i]<d)i++;const f=(d-c[i-1])/((c[i]-c[i-1])||1),a=p[i-1],b=p[i];return{x:a[0]+(b[0]-a[0])*f,y:a[1]+(b[1]-a[1])*f,i,dx:b[0]-a[0],dy:b[1]-a[1]};};
+  const idx=(k,from)=>full.indexOf(k,from||0);
+
+  /* ---- Cámara ---- */
+  let fw=1,fh=1,aspect=1.4;
+  const fit=(cx,cy,bw,bh,pad)=>{let w=bw*pad,h=bh*pad;if(w/h<aspect)w=h*aspect;return{cx,cy,w};};
+  const overview=()=>fit(560,390,1030,700,1.1);
+  // Dos encuadres del sur: Bariloche–Frey–Manso, y 7 Lagos–Lácar; el miércoles la cámara viaja de uno al otro
+  const southCam=()=>fit(110,701,48,64,1.25), northCam=()=>fit(105,638,36,62,1.25);
+  const lakesCam=(i,k)=>blend(southCam(),northCam(),i<5?0:i===5?k:1);
+  const blend=(a,b,t)=>({cx:lerp(a.cx,b.cx,t),cy:lerp(a.cy,b.cy,t),w:a.w*Math.pow(b.w/a.w,t)});
+  let cam=null,tcam=null;
+  const dBrc=cum[idx('brc')], dQq=cum[ida.length-1];
+  const zoomFor=d=>d<dBrc-300?0:d<dBrc?ease((d-(dBrc-300))/300):d<=dQq?1:1-ease(clamp((d-dQq)/260,0,1));
+
+  let vanPos={x:route[0][0],y:route[0][1]}, facing=1, tilt=0, rev=0, lastMove=0, lastCamKey='';
+  function applyCamera(now){
+    const h=cam.w/aspect, vbx=[cam.cx-cam.w/2,cam.cy-h/2,cam.w,h];
+    svg.setAttribute('viewBox',vbx.map(v=>v.toFixed(2)).join(' '));
+    const s=fw/cam.w, zr=overview().w/cam.w;
+    svg.style.setProperty('--z',s.toFixed(4));
+    dots.forEach(([c,r])=>c.setAttribute('r',(r/s).toFixed(3)));
+    shields.forEach(sh=>{const on=zr>=sh.min&&zr<=sh.max;sh.g.style.display=on?'':'none';if(on)sh.g.setAttribute('transform',`translate(${sh.x.toFixed(2)} ${sh.y.toFixed(2)}) scale(${(1/s).toFixed(4)})`);});
+    pins.forEach(p=>{const on=zr>=3;p.g.style.opacity=on?1:0;p.g.style.pointerEvents=on?'':'none';p.g.setAttribute('tabindex',on?0:-1);
+      p.g.setAttribute('transform',`translate(${p.x.toFixed(2)} ${p.y.toFixed(2)}) scale(${((p.g.classList.contains('on')?1.15:1)/s).toFixed(4)})`);});
+    // Etiquetas con prioridad y anticolisión
+    const kept=[];
+    labels.slice().sort((a,b)=>a.pri-b.pri).forEach(l=>{
+      l.el.setAttribute('x',(l.x+l.dx/s).toFixed(2)); l.el.setAttribute('y',(l.y+l.dy/s).toFixed(2));
+      if(zr<l.min){l.el.style.opacity=0;return;}
+      const b=l.el.getBBox(), m=2/s;
+      const hit=kept.some(k=>b.x<k.x+k.width+m&&b.x+b.width+m>k.x&&b.y<k.y+k.height+m&&b.y+b.height+m>k.y);
+      l.el.style.opacity=hit?0:1; if(!hit) kept.push(b);
+    });
+    const bob=(now-lastMove<260&&!reduce)?Math.sin(now/90)*1.2:0;
+    van.setAttribute('transform',`translate(${vanPos.x.toFixed(2)} ${(vanPos.y-(5+bob)/s).toFixed(2)}) scale(${(1.15/s).toFixed(4)})`);
+    vb.setAttribute('transform',`scale(${facing} 1) rotate(${tilt.toFixed(1)})`);
+  }
+  let looping=false;
+  function loop(now){
+    const a=reduce?1:0.14;
+    cam.cx+=(tcam.cx-cam.cx)*a; cam.cy+=(tcam.cy-cam.cy)*a; cam.w=Math.exp(lerp(Math.log(cam.w),Math.log(tcam.w),a));
+    applyCamera(now);
+    const settled=Math.abs(tcam.cx-cam.cx)<0.05&&Math.abs(tcam.cy-cam.cy)<0.05&&Math.abs(tcam.w-cam.w)/tcam.w<0.001;
+    if(settled&&now-lastMove>300){looping=false;applyCamera(now);return;}
+    requestAnimationFrame(loop);
+  }
+  const kick=()=>{if(!looping){looping=true;requestAnimationFrame(loop);}};
+
+  /* ---- Fotos ---- */
+  const PH={
+    nahuel:{cap:'El Nahuel Huapi y el lago Moreno, desde el Cerro Campanario'},
+    frey1:{cap:'El refugio Frey y las agujas del Catedral'},
+    frey2:{cap:'El refugio Frey de noche'},
+    manso1:{cap:'El Manso entre paredes de roca'},
+    manso2:{cap:'Rafting en los rápidos del Manso'},
+    manso3:{cap:'Bajando el Manso entre el bosque'},
+    mascardi:{cap:'El lago Mascardi, a la vuelta del rafting'},
+    arrayanes:{cap:'La pasarela del Bosque de Arrayanes'},
+    angostura:{cap:'Villa La Angostura sobre el Nahuel Huapi'},
+    quilaquina:{cap:'La playa de Quila Quina, sobre el Lácar'}
+  };
+  const PH_ORDER=Object.keys(PH);
+  const src=k=>`img/${k}.jpg`, thumb=k=>`img/${k}-t.jpg`;
+  // Pines con foto, visibles cuando la cámara entra a los lagos
+  const pinDefs=[['nahuel',[-41.065,-71.52],2],['frey1',[-41.20,-71.48],3],['manso1',[-41.60,-71.62],4],['mascardi',[-41.34,-71.53],4],['arrayanes',[-40.835,-71.61],5],['quilaquina',[-40.19,-71.45],6]];
+  const pins=pinDefs.map(([k,ll,day])=>{
+    const [x,y]=xy(ll), gp=mk('g',{class:'pin',tabindex:0,role:'button','aria-label':'Ver foto: '+PH[k].cap});
+    svg.insertBefore(gp,van);
+    mk('path',{class:'tip',d:'M-6 -9 L0 0 L6 -9 Z'},gp);
+    mk('circle',{class:'ring',cx:0,cy:-30,r:21},gp);
+    mk('image',{href:thumb(k),x:-18,y:-48,width:36,height:36,'clip-path':'url(#pinclip)',preserveAspectRatio:'xMidYMid slice'},gp);
+    gp.addEventListener('click',()=>openLb(k));
+    gp.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openLb(k);}});
+    return {g:gp,x,y,day};
+  });
+  const pdefs=mk('defs',{},svg); const pcl=mk('clipPath',{id:'pinclip'},pdefs); mk('circle',{cx:0,cy:-30,r:18},pcl);
+
+  /* ---- Días ---- */
+  const D=[
+    {wd:'viernes',t:'Montevideo a Paso del Puerto',km:250,h:'3 h 30',to:idx('pdp'),
+     txt:'Salimos de tarde, después del trabajo, por la Ruta 3. Asado en el campo y a dormir temprano, porque el sábado arrancamos a las 6.',bed:'Paso del Puerto, Ruta 3 km 250'},
+    {wd:'sábado',t:'Paso del Puerto a Santa Rosa',km:950,h:'11 a 12 h',to:idx('sro'),
+     txt:'Cruzamos la frontera en Fray Bentos antes de que se cargue. Gualeguaychú, el puente Zárate–Brazo Largo, la RN 6 y la RN 5 hasta La Pampa. Los choferes rotan cada dos o tres horas.',bed:'Santa Rosa, la opción más lógica para cortar el viaje',tbd:1},
+    {wd:'domingo',t:'Santa Rosa a Bariloche',km:1010,h:'11 h',to:idx('brc'),
+     txt:'Cruzamos la Ruta del Desierto de mañana y despiertos: son 205 km sin servicios ni señal, así que cargamos nafta en Chacharramendi. Después Neuquén, la RN 237 junto al Limay y la bajada a Bariloche al atardecer.',bed:'la casa frente al Nahuel Huapi, sobre Bustillo',ph:['nahuel']},
+    {wd:'lunes',t:'Trekking al Refugio Frey',km:50,h:'día completo',to:idx('brc'),spur:'frey',
+     txt:'Salimos desde Villa Catedral y subimos hasta la laguna Toncek, entre las agujas del cerro. Para los que quieran algo más tranquilo: Cerro Campanario y Circuito Chico. A la noche, cervecerías en el centro.',bed:'la casa en Bariloche',ph:['frey1','frey2']},
+    {wd:'martes',t:'Rafting en el río Manso',km:170,h:'día completo',to:idx('brc'),spur:'manso',
+     txt:'Tramo Villegas, de clase 2 a 3 y sin experiencia previa, o tramo Frontera, de clase 3 a 4, que termina en el límite con Chile. A la vuelta, playa en el Mascardi o en el Gutiérrez.',bed:'la casa en Bariloche',ph:['manso1','manso2','manso3','mascardi']},
+    {wd:'miércoles',t:'La Ruta de los 7 Lagos',km:200,h:'un día de paradas',to:idx('qq'),
+     txt:'Primero Villa La Angostura, el Bosque de Arrayanes y Bahía Mansa. Después Correntoso, Espejo, Villarino, Falkner y Machónico, frenando en cada playa. Gran parte del camino no tiene señal. A la tarde armamos el campamento.',bed:'el camping de Quila Quina, sobre el Lácar',ph:['arrayanes','angostura']},
+    {wd:'jueves',t:'Día de lago en Quila Quina',km:0,h:'sin auto',to:idx('qq'),
+     txt:'Playa de agua calma, kayak y lancha hasta San Martín de los Andes. Subimos al mirador Bandurrias para ver el Lácar desde arriba y cerramos con el asado de despedida.',bed:'el camping de Quila Quina',ph:['quilaquina']},
+    {wd:'viernes',t:'Quila Quina a Santa Rosa',km:1000,h:'11 h',to:idx('sro',ida.length),
+     txt:'Salimos temprano por Junín de los Andes y Collón Curá hasta la RN 237. Neuquén, y otra vez el desierto, ahora de tarde.',bed:'Santa Rosa, igual que a la ida',tbd:1},
+    {wd:'sábado',t:'Santa Rosa a Gualeguaychú',km:790,h:'9 h',to:idx('gch',ida.length),
+     txt:'El tramo más corto de la vuelta: llegamos con luz para el asado y el descanso.',bed:'El Retiro, el campo en Gualeguaychú'},
+    {wd:'domingo',t:'Gualeguaychú a Montevideo',km:345,h:'5 h con frontera',to:idx('mvd',ida.length),
+     txt:'Frontera en Fray Bentos y ruta tranquila a casa. Llegamos a la tarde, con tiempo para descansar antes del lunes.',bed:'casa'}
+  ];
+  const kmBefore=[]; D.reduce((s,d,i)=>(kmBefore[i]=s,s+d.km),0);
+  const dEnd=D.map(d=>cum[d.to]);
+  const bed='<svg width="18" height="14" viewBox="0 0 18 14" aria-hidden="true"><path d="M1 13V2M1 9h16v4M17 9V7a2 2 0 0 0-2-2H8v4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="4.5" cy="6" r="1.6" fill="currentColor"/></svg>';
+  const chapEl=document.getElementById('chapters');
+  chapEl.innerHTML=D.map((d,i)=>`<article class="chapter${i===0?' on':''}">
+      <span class="rule" aria-hidden="true"><i></i></span>
+      <div class="date">Día ${i+1}</div>
+      <span class="wd">${d.wd[0].toUpperCase()+d.wd.slice(1)}</span>
+      <h3>${d.t}</h3>
+      <p class="meta">${d.km?d.km.toLocaleString('es-UY')+' km':'Sin ruta'} <span>en</span> ${d.h}</p>
+      <p class="txt">${d.txt}</p>
+      ${d.ph?`<figure class="ph"><button class="ph-main" type="button" data-ph="${d.ph[0]}" aria-label="Ver foto: ${PH[d.ph[0]].cap}"><img src="${src(d.ph[0])}" alt="${PH[d.ph[0]].cap}" loading="lazy"></button>
+        <div class="ph-row">${d.ph.slice(1).map(k=>`<button class="ph-thumb" type="button" data-ph="${k}" aria-label="Ver foto: ${PH[k].cap}"><img src="${thumb(k)}" alt=""></button>`).join('')}<figcaption>${PH[d.ph[0]].cap}${d.ph.length>1?`, y ${d.ph.length-1} más`:''}</figcaption></div></figure>`:''}
+      <p class="bed">${bed}<span><b>Dormimos en</b> ${d.bed}.${d.tbd?' <span class="tbd">a definir</span>':''}</span></p>
+    </article>`).join('');
+  const chapters=[...chapEl.querySelectorAll('.chapter')], rules=chapters.map(c=>c.querySelector('.rule i'));
+  const dateEls=chapters.map(c=>c.querySelector('.date')), wdEls=chapters.map(c=>c.querySelector('.wd'));
+  function applyDates(start){ // start: día de enero o null
+    D.forEach((d,i)=>{ if(start){const dt=new Date(2027,0,start+i);dateEls[i].textContent=`${WD[dt.getDay()]} ${dt.getDate()}`;wdEls[i].textContent=`Día ${i+1}`;}
+      else{dateEls[i].textContent=`Día ${i+1}`;wdEls[i].textContent=d.wd[0].toUpperCase()+d.wd.slice(1);} });
+  }
+
+  // La foto del día se descubre la primera vez que el capítulo se activa (en reposo ya está visible)
+  const revealed=new Set();
+  function revealPhoto(i){
+    if(reduce||revealed.has(i)) return; revealed.add(i);
+    const im=chapters[i].querySelector('.ph-main img'); if(!im) return;
+    im.animate([{clipPath:'inset(0 0 100% 0)',transform:'scale(1.12)'},{clipPath:'inset(0 0 0 0)',transform:'scale(1)'}],{duration:1100,easing:'cubic-bezier(.22,1,.36,1)'});
+  }
+  chapEl.addEventListener('click',e=>{const b=e.target.closest('[data-ph]');if(b)openLb(b.dataset.ph);});
+
+  // Visor de fotos
+  const lb=document.getElementById('lb'), lbImg=document.getElementById('lbImg'), lbCap=document.getElementById('lbCap');
+  let lbK=null, lbFrom=null;
+  function showLb(k){lbK=k;lbImg.src=src(k);lbImg.alt=PH[k].cap;lbCap.innerHTML=`${PH[k].cap}<span>${PH_ORDER.indexOf(k)+1} de ${PH_ORDER.length}</span>`;}
+  function openLb(k){
+    lbFrom=document.activeElement; showLb(k); lb.hidden=false; document.body.style.overflow='hidden';
+    if(!reduce) lbImg.animate([{opacity:0,transform:'scale(.96)'},{opacity:1,transform:'none'}],{duration:350,easing:'cubic-bezier(.22,1,.36,1)'});
+    document.getElementById('lbX').focus();
+  }
+  function closeLb(){lb.hidden=true;document.body.style.overflow='';if(lbFrom&&lbFrom.focus)lbFrom.focus();}
+  const stepLb=d=>{const n=PH_ORDER.length;showLb(PH_ORDER[(PH_ORDER.indexOf(lbK)+d+n)%n]);};
+  document.getElementById('lbX').addEventListener('click',closeLb);
+  document.getElementById('lbPrev').addEventListener('click',()=>stepLb(-1));
+  document.getElementById('lbNext').addEventListener('click',()=>stepLb(1));
+  lb.addEventListener('click',e=>{if(e.target===lb)closeLb();});
+  addEventListener('keydown',e=>{if(lb.hidden)return;if(e.key==='Escape')closeLb();if(e.key==='ArrowLeft')stepLb(-1);if(e.key==='ArrowRight')stepLb(1);});
+
+  const odoKm=document.getElementById('odoKm'), odoDay=document.getElementById('odoDay');
+  let activeI=0;
+  function render(p){
+    const i=clamp(Math.floor(p),0,D.length-1), f=clamp(p-i,0,1), k=ease(clamp(f/0.7,0,1));
+    const d0=i===0?0:dEnd[i-1], d1=dEnd[i];
+    let pos,d,mx,my;
+    Object.keys(spurDone).forEach(key=>{const di=D.findIndex(x=>x.spur===key);spurDone[key].setAttribute('points',i>di?line(SP[key]):'');});
+    if(D[i].spur){
+      const key=D[i].spur,poly=SP[key],c=SPC[key],tot=c[c.length-1],sOut=f<.5?ease(f*2):1,sBack=f<.5?0:ease((f-.5)*2);
+      const sd=f<.5?sOut*tot:(1-sBack)*tot; pos=along(poly,c,sd); d=d1;
+      const drawn=along(poly,c,sOut*tot); spurDone[key].setAttribute('points',line(poly.slice(0,drawn.i).concat([[drawn.x,drawn.y]])));
+      mx=f<.5?pos.dx:-pos.dx; my=f<.5?pos.dy:-pos.dy;
+    } else { d=d0+(d1-d0)*k; pos=along(route,cum,d); mx=pos.dx; my=pos.dy; }
+    // Rumbo de la van: da vuelta solo si el giro se sostiene
+    const moved=Math.hypot(pos.x-vanPos.x,pos.y-vanPos.y);
+    if(moved>0.01){
+      lastMove=performance.now();
+      const wantFace=Math.sign(pos.x-vanPos.x)||facing;
+      if(wantFace!==facing){rev+=moved*(fw/cam.w); if(rev>30||reduce){facing=wantFace;rev=0;}} else rev=0;
+      const ang=Math.atan2(my,mx*facing)*180/Math.PI;
+      tilt=lerp(tilt,clamp(Math.abs(ang)>90?0:ang,-18,18),0.35);
+    }
+    vanPos={x:pos.x,y:pos.y};
+    const dp=along(route,cum,d); done.setAttribute('points',line(route.slice(0,dp.i).concat([[dp.x,dp.y]])));
+    freyDot.style.fill=D[i].spur==='frey'?'var(--route)':''; mansoDot.style.fill=D[i].spur==='manso'?'var(--route)':'';
+    pins.forEach(pp=>pp.g.classList.toggle('on',pp.day===i));
+    // Cámara objetivo
+    const fol={cx:pos.x,cy:pos.y,w:overview().w/(fw<600?2.2:1.6)};
+    let base=fol;
+    if(i===0) base=blend(overview(),fol,ease(clamp(f/0.4,0,1)));
+    if(i===D.length-1) base=blend(fol,overview(),ease(clamp((f-.45)/.45,0,1)));
+    tcam=blend(base,lakesCam(i,k),zoomFor(d));
+    if(!cam) cam=Object.assign({},tcam);
+    kick();
+    odoKm.textContent=Math.round(kmBefore[i]+D[i].km*k).toLocaleString('es-UY');
+    odoDay.textContent=`día ${i+1} de 10`;
+    rules.forEach((r,j)=>r.style.transform=`scaleY(${j<i?1:j>i?0:f.toFixed(3)})`);
+    if(i!==activeI){chapters[activeI].classList.remove('on');chapters[i].classList.add('on');activeI=i;revealPhoto(i);}
+  }
+
+  let tops=[];
+  const measure=()=>{tops=chapters.map(c=>c.getBoundingClientRect().top+scrollY);};
+  function progress(){
+    const l=scrollY+innerHeight*0.55;
+    if(l<tops[0]) return 0;
+    for(let i=0;i<tops.length;i++){const a=tops[i],b=i<tops.length-1?tops[i+1]:a+chapters[i].offsetHeight;if(l<b) return i+(l-a)/(b-a);}
+    return D.length-0.0001;
+  }
+  function sizeFrame(){
+    const r=frame.getBoundingClientRect(); fw=Math.max(1,r.width); fh=Math.max(1,r.height); aspect=fw/fh;
+    if(cam){render(progress()); cam=Object.assign({},tcam); applyCamera(performance.now());}
+  }
+  let ticking=false;
+  const bar=document.getElementById('progressBar');
+  const readBar=()=>{const max=document.documentElement.scrollHeight-innerHeight;bar.style.transform=`scaleX(${max>0?clamp(scrollY/max,0,1).toFixed(4):0})`;};
+  const onScroll=()=>{if(ticking)return;ticking=true;requestAnimationFrame(()=>{ticking=false;heroParallax();readBar();render(progress());});};
+  addEventListener('scroll',onScroll,{passive:true});
+  const ro=new ResizeObserver(()=>{measure();sizeFrame();onScroll();});
+  ro.observe(frame); ro.observe(chapEl);
+  const r0=frame.getBoundingClientRect(); fw=Math.max(1,r0.width); fh=Math.max(1,r0.height); aspect=fw/fh;
+  measure(); render(progress()); cam=Object.assign({},tcam); applyCamera(performance.now());
+  if(document.fonts&&document.fonts.ready) document.fonts.ready.then(()=>{measure();onScroll();});
+
+  // Recorrido automático: maneja el scroll, así texto y mapa van juntos
+  const tourBtn=document.getElementById('tour'), tourIcon=document.getElementById('tourIcon');
+  let touring=false, tourRaf=null;
+  const setIcon=on=>{tourIcon.setAttribute('d',on?'M4 3h3v10H4zM9 3h3v10H9z':'M4 2.5v11l9-5.5z');tourBtn.setAttribute('aria-label',on?'Frenar el recorrido':'Recorrer el viaje solo');};
+  const stopTour=()=>{if(!touring)return;touring=false;cancelAnimationFrame(tourRaf);setIcon(false);};
+  ['wheel','touchstart','keydown'].forEach(ev=>addEventListener(ev,e=>{if(ev==='keydown'&&e.target===tourBtn)return;stopTour();},{passive:true}));
+  tourBtn.addEventListener('click',()=>{
+    if(touring){stopTour();return;}
+    measure(); const start=tops[0]-innerHeight*0.55+2, end=tops[tops.length-1]+chapters[chapters.length-1].offsetHeight-innerHeight*0.55-2;
+    if(reduce){scrollTo({top:end,behavior:'instant'});return;}
+    const from=(scrollY>start&&scrollY<end-50)?scrollY:start, dur=32000*(end-from)/(end-start), t0=performance.now();
+    touring=true; setIcon(true);
+    const step=now=>{if(!touring)return;const t=Math.min(1,(now-t0)/dur);scrollTo({top:from+(end-from)*t,behavior:'instant'});if(t<1)tourRaf=requestAnimationFrame(step);else{touring=false;setIcon(false);}};
+    tourRaf=requestAnimationFrame(step);
+  });
+
+  /* ============ ACTO 3: LAGOS A ESCALA ============ */
+  const L2=[
+    ['Nahuel Huapi','El grande: frente a la casa, y Bahía Mansa en Villa La Angostura'],
+    ['Gutiérrez','Playas al pie del Catedral, después del Frey'],
+    ['Mascardi','Arena, a la vuelta del rafting'],
+    ['Correntoso','Donde arranca la Ruta de los 7 Lagos'],
+    ['Espejo','Agua quieta, como dice el nombre'],
+    ['Villarino','Playa a metros de la ruta'],
+    ['Falkner','Pegado al Villarino, sobre la RN 40'],
+    ['Lácar','Quila Quina: el agua más calma, al lado del camping']
+  ];
+  const S=9.2;
+  document.getElementById('lakes').innerHTML=L2.map(([n,s])=>{
+    const ps=LAKES[n].map(xy),xs=ps.map(p=>p[0]),ys=ps.map(p=>p[1]);
+    const mx=Math.min(...xs),my=Math.min(...ys),w=(Math.max(...xs)-mx)*S,h=(Math.max(...ys)-my)*S;
+    const q=ps.map(p=>[(p[0]-mx)*S+2,(p[1]-my)*S+2]);
+    return `<div class="lk"><svg width="${(w+4).toFixed(0)}" height="${(h+4).toFixed(0)}" viewBox="0 0 ${(w+4).toFixed(1)} ${(h+4).toFixed(1)}" role="img" aria-label="Forma del lago ${n}"><path d="${smoothClosed(q)}"/></svg><b>${n}</b><span>${s}</span></div>`;
+  }).join('');
+
+  /* ============ PLATA ============ */
+  const B=[['Ruta: nafta, peajes y paradas',230,'var(--lake)'],['Comida, cocinando casi siempre',180,'var(--route)'],['Actividades: rafting y parques',130,'var(--forest)'],['Casa y camping',115,'var(--glacier)'],['Imprevistos',45,'var(--mount)']];
+  const tot=B.reduce((s,b)=>s+b[1],0);
+  const stack=document.getElementById('stack');
+  stack.innerHTML=B.map(b=>`<div style="flex:${b[1]};background:${b[2]}">${b[1]>=100?b[1]:''}</div>`).join('');
+  document.getElementById('ticket').innerHTML=B.map(b=>`<div><i class="k" style="background:${b[2]}"></i><span>${b[0]}</span><span class="lead"></span><b>${b[1]}</b></div>`).join('')+`<div class="sum"><span>Total por persona</span><span class="lead" style="border:0"></span><b>US$${tot}</b></div>`;
+  const totalEl=document.getElementById('total');
+  if(!reduce&&'IntersectionObserver' in window){
+    const io=new IntersectionObserver(es=>es.forEach(e=>{
+      if(!e.isIntersecting)return; io.unobserve(e.target);
+      if(e.target===stack) stack.animate([{clipPath:'inset(0 100% 0 0)'},{clipPath:'inset(0 0 0 0)'}],{duration:900,easing:'cubic-bezier(.22,1,.36,1)'});
+      if(e.target===totalEl){const t0=performance.now();const tick=now=>{const k=Math.min(1,(now-t0)/1100);totalEl.textContent='US$'+Math.round(tot*ease(k));if(k<1)requestAnimationFrame(tick);};requestAnimationFrame(tick);}
+      if(e.target.classList.contains('vs-track')) e.target.animate([{clipPath:'inset(0 100% 0 0 round 999px)'},{clipPath:'inset(0 0 0 0 round 999px)'}],{duration:1100,easing:'cubic-bezier(.22,1,.36,1)'});
+    }),{threshold:.5});
+    io.observe(stack); io.observe(totalEl); document.querySelectorAll('.vs-track').forEach(n=>io.observe(n));
+  }
+
+  /* ============ DECIDIR: enero 2027 ============ */
+  let saved={}; try{saved=JSON.parse(localStorage.getItem('sur27')||'{}')||{};}catch(e){saved={};}
+  const persist=()=>{try{localStorage.setItem('sur27',JSON.stringify(saved));}catch(e){}};
+  const OPT={a:{start:15,label:'Opción A',sub:'Viernes 15 al domingo 24'},b:{start:22,label:'Opción B',sub:'Viernes 22 al domingo 31'}};
+  const cal=document.getElementById('cal');
+  let h='';
+  for(let d=1;d<=31;d++){const wd=new Date(2027,0,d).getDay();h+=`<div class="wk" style="grid-row:1;grid-column:${d}">${WD[wd].slice(0,1)}</div><div class="dn${wd===0||wd===6?' we':''}" data-d="${d}" style="grid-row:2;grid-column:${d}">${d}</div>`;}
+  h+=Object.entries(OPT).map(([k,o],j)=>`<label class="band-opt" style="grid-row:${3+j};grid-column:${o.start} / span 10"><input type="radio" name="fecha" id="fecha-${k}" value="${k}"><span>${o.label}<small>${o.sub}</small></span></label>`).join('');
+  cal.innerHTML=h;
+  const dayCells=[...cal.querySelectorAll('.dn')];
+  function choose(k){
+    const o=OPT[k]; dayCells.forEach(c=>{const d=+c.dataset.d;c.classList.toggle('sel',!!o&&d>=o.start&&d<o.start+10);});
+    applyDates(o?o.start:null);
+  }
+  cal.querySelectorAll('input[name="fecha"]').forEach(r=>r.addEventListener('change',()=>{saved.fecha=r.value;persist();choose(r.value);}));
+  if(saved.fecha&&OPT[saved.fecha]){document.getElementById('fecha-'+saved.fecha).checked=true;choose(saved.fecha);}
+
+  const C=[
+    ['quienes','Confirmar quiénes se suman','Cuantos más, mejor'],
+    ['licencia','Pedir los 5 días de licencia',''],
+    ['autos','Definir autos y choferes','Según cuántos seamos, con dos choferes por auto'],
+    ['cabana','Reservar la casa en Bariloche','Con cancelación flexible hasta cerrar la lista'],
+    ['parada','Definir la parada en ruta, ida y vuelta','Santa Rosa es la opción más lógica; en enero se llena'],
+    ['camping','Llamar al camping Quila Quina','Preguntar si toman reserva de grupo'],
+    ['papeles','Carta verde y papeles de cada auto','']
+  ];
+  const todo=document.getElementById('todo');
+  todo.innerHTML=C.map(([id,b,s])=>`<label class="check" for="ck-${id}"><input type="checkbox" id="ck-${id}" ${saved[id]?'checked':''}><div><b>${b}</b>${s?`<small>${s}</small>`:''}</div></label>`).join('');
+  todo.addEventListener('change',e=>{saved[e.target.id.replace('ck-','')]=e.target.checked;persist();});
+})();
+</script>
+
+</body>
+</html>
